@@ -1,0 +1,7 @@
+{
+  "environmentVariables": {
+    "SHARED_SECRET": {
+      "variableType": "secret"
+    }
+  }
+}

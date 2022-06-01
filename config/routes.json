@@ -1,0 +1,178 @@
+{
+  "routes": [
+    {
+      "methods": [
+        "GET"
+      ],
+      "path": "/products",
+      "label": "Get all products",
+      "summary": "Route Summary",
+      "description": "Lorem ipsum dolor sit amet, **consectetur adipiscing** elit, sed do `eiusmod tempor` incididunt ut labore et dolore magna aliqua.",
+      "version": "v1",
+      "corsPolicy": "none",
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/hello-world)",
+        "options": {}
+      },
+      "policies": {
+        "inbound": [
+          "api-key-auth-inbound",
+          "set-headers-inbound"
+        ]
+      }
+    },
+    {
+      "methods": [
+        "GET"
+      ],
+      "path": "/products/:productId",
+      "label": "Get product by ID",
+      "summary": "Route Summary",
+      "description": "Lorem ipsum dolor sit amet, **consectetur adipiscing** elit, sed do `eiusmod tempor` incididunt ut labore et dolore magna aliqua.",
+      "version": "v1",
+      "corsPolicy": "none",
+      "handler": {
+        "export": "urlRewriteHandler",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "rewritePattern": "https://ecommerce-api.zuplo.io/products/${params.productId}"
+        }
+      },
+      "policies": {
+        "inbound": [
+          "api-key-auth-inbound"
+        ]
+      }
+    },
+    {
+      "methods": [
+        "POST"
+      ],
+      "path": "/products",
+      "label": "Upload a product",
+      "summary": "Route Summary",
+      "description": "Lorem ipsum dolor sit amet, **consectetur adipiscing** elit, sed do `eiusmod tempor` incididunt ut labore et dolore magna aliqua.",
+      "version": "v1",
+      "corsPolicy": "none",
+      "handler": {
+        "export": "urlRewriteHandler",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "rewritePattern": "https://ecommerce-api.zuplo.io/products/"
+        }
+      },
+      "policies": {
+        "inbound": [
+          "api-key-auth-inbound",
+          "validate-json-schema-inbound"
+        ]
+      }
+    },
+    {
+      "methods": [
+        "GET"
+      ],
+      "path": "/",
+      "label": "Echo the user",
+      "summary": "Route Summary",
+      "description": "Lorem ipsum dolor sit amet, **consectetur adipiscing** elit, sed do `eiusmod tempor` incididunt ut labore et dolore magna aliqua.",
+      "version": "v1",
+      "corsPolicy": "none",
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/jack-demo)",
+        "options": {}
+      },
+      "policies": {
+        "inbound": [
+          "api-key-auth-inbound",
+          "custom-code-inbound"
+        ]
+      }
+    }
+  ],
+  "versions": [
+    {
+      "name": "none",
+      "pathPrefix": "",
+      "info": {
+        "title": "My API, powered by Zuplo",
+        "description": "You can document your API directly in this file. Save your changes and open your developer portal to see it in action.",
+        "version": "0.0.0"
+      }
+    },
+    {
+      "name": "v1",
+      "pathPrefix": "/v1",
+      "info": {
+        "title": "My API V1, powered by Zuplo",
+        "description": "<insert description for v1>",
+        "version": "1.0.0"
+      }
+    }
+  ],
+  "policies": [
+    {
+      "handler": {
+        "export": "BasicRateLimitInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "rateLimitBy": "ip",
+          "requestsAllowed": 1,
+          "timeWindowMinutes": 1
+        }
+      },
+      "name": "rate-limit-inbound",
+      "policyType": "rate-limit-inbound"
+    },
+    {
+      "handler": {
+        "export": "ValidateJsonSchemaInbound",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "validator": "$import(./schemas/example-schema.json)"
+        }
+      },
+      "name": "validate-json-schema-inbound",
+      "policyType": "validate-json-schema-inbound"
+    },
+    {
+      "handler": {
+        "export": "ApiAuthKeyInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "allowUnauthenticatedRequests": false
+        }
+      },
+      "name": "api-key-auth-inbound",
+      "policyType": "api-key-auth-inbound"
+    },
+    {
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/jack-demo-policy)",
+        "options": {}
+      },
+      "name": "custom-code-inbound",
+      "policyType": "custom-code-inbound"
+    },
+    {
+      "handler": {
+        "export": "SetHeadersInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "headers": [
+            {
+              "name": "shared-secret",
+              "value": "$env(SHARED_SECRET)",
+              "overwrite": true
+            }
+          ]
+        }
+      },
+      "name": "set-headers-inbound",
+      "policyType": "set-headers-inbound"
+    }
+  ]
+}
