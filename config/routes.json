@@ -18,7 +18,9 @@
         }
       },
       "policies": {
-        "inbound": []
+        "inbound": [
+          "api-key-auth-inbound"
+        ]
       }
     },
     {
