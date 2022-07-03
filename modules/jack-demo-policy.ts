@@ -16,6 +16,8 @@ export default async function (
 		return request;
 	}
 
+	context.log.info('foo');
+
 	return new Response(`Nope, you gotta be an super-admin`, {
 		status: 401
 	});

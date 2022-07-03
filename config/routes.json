@@ -2,6 +2,29 @@
   "routes": [
     {
       "methods": [
+        "GET",
+        "POST"
+      ],
+      "path": "/hi-mom",
+      "summary": "Hello This new route",
+      "description": "Lorem ipsum dolor sit amet, **consectetur adipiscing** elit, sed do `eiusmod tempor` incididunt ut labore et dolore magna aliqua.",
+      "version": "v1",
+      "corsPolicy": "none",
+      "handler": {
+        "export": "urlRewriteHandler",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "rewritePattern": "https://welcome.zuplo.io/"
+        }
+      },
+      "policies": {
+        "inbound": [
+          "api-key-auth-inbound"
+        ]
+      }
+    },
+    {
+      "methods": [
         "GET"
       ],
       "path": "/products",
@@ -18,7 +41,8 @@
       "policies": {
         "inbound": [
           "api-key-auth-inbound",
-          "set-headers-inbound"
+          "set-headers-inbound",
+          "basic-auth-inbound"
         ]
       }
     },
@@ -88,6 +112,28 @@
         "inbound": [
           "api-key-auth-inbound",
           "custom-code-inbound"
+        ]
+      }
+    },
+    {
+      "methods": [
+        "POST"
+      ],
+      "path": "/chad-mountain-rescue",
+      "summary": "",
+      "description": "Lorem ipsum dolor sit amet, **consectetur adipiscing** elit, sed do `eiusmod tempor` incididunt ut labore et dolore magna aliqua.",
+      "version": "v1",
+      "corsPolicy": "none",
+      "handler": {
+        "export": "urlRewriteHandler",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "rewritePattern": "https://welcome.zuplo.io/"
+        }
+      },
+      "policies": {
+        "inbound": [
+          "validate-json-schema-inbound-1"
         ]
       }
     }
@@ -173,6 +219,50 @@
       },
       "name": "set-headers-inbound",
       "policyType": "set-headers-inbound"
+    },
+    {
+      "handler": {
+        "export": "Auth0JwtInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "allowUnauthenticatedRequests": false,
+          "auth0Domain": "$env(AUTH0_DOMAIN)",
+          "audience": "$env(AUTH0_AUDIENCE)"
+        }
+      },
+      "name": "auth0-jwt-auth-inbound",
+      "policyType": "auth0-jwt-auth-inbound"
+    },
+    {
+      "handler": {
+        "export": "BasicAuthInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "accounts": [
+            {
+              "data": {
+                "number": 1
+              },
+              "password": "PASSWORD",
+              "username": "USERNAME"
+            }
+          ],
+          "allowUnauthenticatedRequests": false
+        }
+      },
+      "name": "basic-auth-inbound",
+      "policyType": "basic-auth-inbound"
+    },
+    {
+      "handler": {
+        "export": "ValidateJsonSchemaInbound",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "validator": "$import(./schemas/example-schema.json)"
+        }
+      },
+      "name": "validate-json-schema-inbound-1",
+      "policyType": "validate-json-schema-inbound"
     }
   ]
 }
